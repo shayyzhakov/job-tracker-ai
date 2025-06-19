@@ -8,7 +8,7 @@ import {
   CompanyIndustrySchema,
   CompanyLocationSchema,
   CompanyNotesSchema,
-} from '../schema/company';
+} from '../schemas/company.schema';
 
 export function registerCompanyTools(
   server: McpServer,

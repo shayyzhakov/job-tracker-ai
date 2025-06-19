@@ -7,7 +7,7 @@ import {
   CompanyNameSchema,
   CompanyLocationSchema,
   CompanyNotesSchema,
-} from '../schema/company';
+} from '../schemas/company.schema';
 import {
   UserIdSchema,
   TitleSchema,
@@ -20,7 +20,7 @@ import {
   InitiatedBySchema,
   NotesSchema,
   RoleIdSchema,
-} from '../schema/role';
+} from '../schemas/role.schema';
 
 export type AddRoleParams = {
   user_id?: string;
