@@ -1,0 +1,29 @@
+{
+  "name": "job-tracker-mcp",
+  "version": "0.1.0",
+  "main": "src/server.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "inspect": "npx @modelcontextprotocol/inspector node dist/index.js $1 $2",
+    "inspect:debug": "npx @modelcontextprotocol/inspector node --inspect-brk dist/index.js",
+    "lint": "eslint . --ext .js,.ts",
+    "format": "prettier --write ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.12.3",
+    "@supabase/supabase-js": "^2.50.0",
+    "zod": "^3.25.65"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.3",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.8.3"
+  }
+}

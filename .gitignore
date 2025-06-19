@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Build outputs
+dist/
+
+# IDE and editor files
+.vscode/
+
+# Playground
+playground.ts
