@@ -3,6 +3,8 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { initializeSupabase } from './supabase.js';
 import { registerCompanyTools } from './tools/company.js';
 import { registerRoleTools } from './tools/role.js';
+import { registerInterviewEventTools } from './tools/interview-event.js';
+import { registerContactTools } from './tools/contact.js';
 import { validateArgs } from './args.js';
 
 const { supabaseUrl, supabaseAnonKey } = validateArgs();
@@ -16,20 +18,14 @@ const server = new McpServer({
 // Register all tools
 registerCompanyTools(server, supabase);
 registerRoleTools(server, supabase);
+registerInterviewEventTools(server, supabase);
+registerContactTools(server, supabase);
 
 async function main() {
   try {
     const transport = new StdioServerTransport();
-    transport.onerror = (error) => {
-      console.error('Error:', error);
-    };
-    transport.onmessage = (message) => {
-      console.log('Message:', message);
-    };
 
     await server.connect(transport);
-
-    // console.log('MCP server started');
   } catch (error) {
     // console.error('Error starting MCP server:', error);
     process.exit(1);

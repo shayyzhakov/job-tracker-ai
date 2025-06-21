@@ -154,7 +154,7 @@ Example compensation format:
 | event_type   | enum      | application, hr_screen, tech_screen, take_home, onsite, offer, rejection, followup, custom |
 | event_date   | timestamp |                                                                                            |
 | contact_id   | UUID      | Nullable, foreign key → contacts.id                                                        |
-| meeting_type | enum      | phone_call, zoom_meeting, onsite_meeting, coffee_chat, async, other                        |
+| meeting_type | enum      | phone_call, zoom_meeting, onsite_meeting, coffee_chat, other                               |
 | notes        | text      | Optional                                                                                   |
 | outcome      | text      | Optional                                                                                   |
 
