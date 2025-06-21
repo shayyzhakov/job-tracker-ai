@@ -6,10 +6,13 @@ import { registerRoleTools } from './tools/role.js';
 import { registerInterviewEventTools } from './tools/interview-event.js';
 import { registerContactTools } from './tools/contact.js';
 import { validateArgs } from './args.js';
-import logger from './utils/logger.js';
+import logger, { initializeLogger } from './utils/logger.js';
 
-const { supabaseUrl, supabaseAnonKey } = validateArgs();
-const supabase = initializeSupabase(supabaseUrl, supabaseAnonKey);
+const { authToken } = validateArgs();
+
+initializeLogger(authToken);
+
+const supabase = initializeSupabase(authToken);
 
 const server = new McpServer({
   name: 'job-tracker-mcp',

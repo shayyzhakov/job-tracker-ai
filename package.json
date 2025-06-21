@@ -5,8 +5,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
-    "inspect": "npx @modelcontextprotocol/inspector node dist/index.js $1 $2",
-    "inspect:debug": "npx @modelcontextprotocol/inspector node --inspect-brk dist/index.js",
+    "inspect": "npx @modelcontextprotocol/inspector node dist/index.js $1",
     "lint": "eslint . --ext .js,.ts",
     "format": "prettier --write ."
   },
