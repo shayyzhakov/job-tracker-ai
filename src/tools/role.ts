@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import logger from '@/utils/logger';
+import logger from '../utils/logger';
 import {
   CompanySizeSchema,
   CompanyIndustrySchema,
