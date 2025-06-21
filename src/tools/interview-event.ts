@@ -1,5 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import logger from '../utils/logger';
 import {
   InterviewEventIdSchema,
   EventTypeSchema,
@@ -26,18 +27,26 @@ export function registerInterviewEventTools(
       },
     },
     async (args: Record<string, unknown>) => {
+      logger.info('[tool:getInterviewEvents] tool called');
       const { role_id } = args;
       const { data, error } = await supabase
         .from('interview_events')
         .select('*')
         .eq('role_id', role_id);
+
       if (error) {
+        logger.error(
+          '[tool:getInterviewEvents] error fetching interview events',
+          error,
+        );
         return {
           content: [
             { type: 'text', text: JSON.stringify({ error: error.message }) },
           ],
         };
       }
+
+      logger.info('[tool:getInterviewEvents] tool completed');
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };
@@ -64,6 +73,7 @@ export function registerInterviewEventTools(
       },
     },
     async (args: Record<string, unknown>) => {
+      logger.info('[tool:addInterviewEvent] tool called');
       const {
         role_id,
         event_type,
@@ -88,13 +98,20 @@ export function registerInterviewEventTools(
         ])
         .select()
         .single();
+
       if (error) {
+        logger.error(
+          '[tool:addInterviewEvent] error adding interview event',
+          error,
+        );
         return {
           content: [
             { type: 'text', text: JSON.stringify({ error: error.message }) },
           ],
         };
       }
+
+      logger.info('[tool:addInterviewEvent] tool completed');
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };
@@ -116,6 +133,7 @@ export function registerInterviewEventTools(
       },
     },
     async (args: Record<string, unknown>) => {
+      logger.info('[tool:updateInterviewEvent] tool called');
       const {
         id,
         event_type,
@@ -138,13 +156,20 @@ export function registerInterviewEventTools(
         .eq('id', id)
         .select()
         .single();
+      logger.info('[tool:updateInterviewEvent] tool completed');
       if (error) {
+        logger.error(
+          '[tool:updateInterviewEvent] error updating interview event',
+          error,
+        );
         return {
           content: [
             { type: 'text', text: JSON.stringify({ error: error.message }) },
           ],
         };
       }
+
+      logger.info('[tool:updateInterviewEvent] tool completed');
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };
@@ -162,18 +187,26 @@ export function registerInterviewEventTools(
       },
     },
     async (args: Record<string, unknown>) => {
+      logger.info('[tool:removeInterviewEvent] tool called');
       const { id } = args;
       const { error } = await supabase
         .from('interview_events')
         .delete()
         .eq('id', id);
+
       if (error) {
+        logger.error(
+          '[tool:removeInterviewEvent] error removing interview event',
+          error,
+        );
         return {
           content: [
             { type: 'text', text: JSON.stringify({ error: error.message }) },
           ],
         };
       }
+
+      logger.info('[tool:removeInterviewEvent] tool completed');
       return {
         content: [
           {

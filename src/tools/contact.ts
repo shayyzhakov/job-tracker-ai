@@ -1,5 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import logger from '../utils/logger';
 import {
   ContactIdSchema,
   NameSchema,
@@ -27,6 +28,7 @@ export function registerContactTools(
       },
     },
     async (args: Record<string, unknown>) => {
+      logger.info('[tool:getContacts] tool called');
       const { company_name } = args;
 
       let query = supabase.from('companies').select('*, contacts(*)');
@@ -38,6 +40,7 @@ export function registerContactTools(
       const { data, error } = await query;
 
       if (error) {
+        logger.error('[tool:getContacts] error fetching contacts', error);
         return {
           content: [
             { type: 'text', text: JSON.stringify({ error: error.message }) },
@@ -45,6 +48,7 @@ export function registerContactTools(
         };
       }
 
+      logger.info('[tool:getContacts] tool completed');
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };
@@ -66,6 +70,7 @@ export function registerContactTools(
       },
     },
     async (args: Record<string, unknown>) => {
+      logger.info('[tool:addContact] tool called');
       const {
         company_id,
         name,
@@ -93,6 +98,7 @@ export function registerContactTools(
         .single();
 
       if (error) {
+        logger.error('[tool:addContact] error adding contact', error);
         return {
           content: [
             { type: 'text', text: JSON.stringify({ error: error.message }) },
@@ -100,6 +106,7 @@ export function registerContactTools(
         };
       }
 
+      logger.info('[tool:addContact] tool completed');
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };
@@ -121,6 +128,7 @@ export function registerContactTools(
       },
     },
     async (args: Record<string, unknown>) => {
+      logger.info('[tool:updateContact] tool called');
       const { id, name, role, email, linkedin_url, phone_number, notes } = args;
 
       const updateData: Record<string, unknown> = {};
@@ -139,6 +147,7 @@ export function registerContactTools(
         .single();
 
       if (error) {
+        logger.error('[tool:updateContact] error updating contact', error);
         return {
           content: [
             { type: 'text', text: JSON.stringify({ error: error.message }) },
@@ -146,6 +155,7 @@ export function registerContactTools(
         };
       }
 
+      logger.info('[tool:updateContact] tool completed');
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };

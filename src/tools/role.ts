@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import logger from '@/utils/logger';
 import {
   CompanySizeSchema,
   CompanyIndustrySchema,
@@ -53,6 +54,7 @@ export function registerRoleTools(server: McpServer, supabase: SupabaseClient) {
       },
     },
     async (args: Record<string, unknown>) => {
+      logger.info('[tool:getRoles] tool called');
       const { company_name } = args;
 
       let query = supabase.from('companies').select('*, roles(*)');
@@ -64,6 +66,7 @@ export function registerRoleTools(server: McpServer, supabase: SupabaseClient) {
       const { data, error } = await query;
 
       if (error) {
+        logger.error('[tool:getRoles] error fetching roles', error);
         return {
           content: [
             { type: 'text', text: JSON.stringify({ error: error.message }) },
@@ -71,6 +74,7 @@ export function registerRoleTools(server: McpServer, supabase: SupabaseClient) {
         };
       }
 
+      logger.info('[tool:getRoles] tool completed');
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };
@@ -101,6 +105,7 @@ export function registerRoleTools(server: McpServer, supabase: SupabaseClient) {
       },
     },
     async (args: Record<string, unknown>) => {
+      logger.info('[tool:addRole] tool called');
       const {
         user_id,
         company_name,
@@ -124,7 +129,12 @@ export function registerRoleTools(server: McpServer, supabase: SupabaseClient) {
         .from('companies')
         .select('id')
         .eq('name', company_name);
+
       if (findError) {
+        logger.error(
+          '[tool:addRole] error finding company in addRole',
+          findError,
+        );
         return {
           content: [
             {
@@ -151,7 +161,12 @@ export function registerRoleTools(server: McpServer, supabase: SupabaseClient) {
           ])
           .select('id')
           .single();
+
         if (insertError) {
+          logger.error(
+            '[tool:addRole] error inserting company in addRole',
+            insertError,
+          );
           return {
             content: [
               {
@@ -189,6 +204,7 @@ export function registerRoleTools(server: McpServer, supabase: SupabaseClient) {
         .single();
 
       if (error) {
+        logger.error('[tool:addRole] error inserting role in addRole', error);
         return {
           content: [
             { type: 'text', text: JSON.stringify({ error: error.message }) },
@@ -196,6 +212,7 @@ export function registerRoleTools(server: McpServer, supabase: SupabaseClient) {
         };
       }
 
+      logger.info('[tool:addRole] tool completed');
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };
@@ -221,6 +238,7 @@ export function registerRoleTools(server: McpServer, supabase: SupabaseClient) {
       },
     },
     async (args: Record<string, unknown>) => {
+      logger.info('[tool:updateRole] tool called');
       const {
         id,
         title,
@@ -252,12 +270,14 @@ export function registerRoleTools(server: McpServer, supabase: SupabaseClient) {
         .select()
         .single();
       if (error) {
+        logger.error('[tool:updateRole] error updating role', error);
         return {
           content: [
             { type: 'text', text: JSON.stringify({ error: error.message }) },
           ],
         };
       }
+      logger.info('[tool:updateRole] tool completed');
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };

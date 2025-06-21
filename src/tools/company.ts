@@ -9,6 +9,7 @@ import {
   CompanyLocationSchema,
   CompanyNotesSchema,
 } from '../schemas/company.schema';
+import logger from '../utils/logger';
 
 export function registerCompanyTools(
   server: McpServer,
@@ -22,8 +23,11 @@ export function registerCompanyTools(
       inputSchema: {},
     },
     async () => {
+      logger.info('[tool:getCompanies] tool called');
+
       const { data, error } = await supabase.from('companies').select('*');
       if (error) {
+        logger.error('[tool:getCompanies] error fetching companies', error);
         return {
           isError: true,
           content: [
@@ -31,6 +35,8 @@ export function registerCompanyTools(
           ],
         };
       }
+
+      logger.info('[tool:getCompanies] tool completed');
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
         structuredContent: { companies: data },
@@ -73,6 +79,7 @@ export function registerCompanyTools(
         location?: string;
         notes?: string;
       } = {};
+      logger.info('[tool:updateCompany] tool called');
       if (name !== undefined) updateData.name = name;
       if (size !== undefined) updateData.size = size;
       if (industry !== undefined) updateData.industry = industry;
@@ -87,6 +94,7 @@ export function registerCompanyTools(
         .single();
 
       if (error) {
+        logger.error('[tool:updateCompany] error updating company', error);
         return {
           content: [
             { type: 'text', text: JSON.stringify({ error: error.message }) },
@@ -94,6 +102,7 @@ export function registerCompanyTools(
         };
       }
 
+      logger.info('[tool:updateCompany] tool completed');
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };
