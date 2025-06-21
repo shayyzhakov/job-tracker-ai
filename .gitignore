@@ -12,6 +12,3 @@ dist/
 
 # Playground
 playground.ts
-
-# Logs
-mcp-tool.log

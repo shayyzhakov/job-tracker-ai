@@ -98,3 +98,12 @@ Once configured, you can interact with the job tracker through natural language 
 - "List all companies I've applied to"
 
 The AI will automatically use the appropriate MCP tools to manage your job search data.
+
+### Printing Logs
+
+The log file is written to `mcp-tool.log` in your user's home directory.
+To view the application's logs in real-time, you can use the following command in your terminal:
+
+```bash
+tail -f ~/mcp-tool.log
+```
