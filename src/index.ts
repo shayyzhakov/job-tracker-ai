@@ -6,6 +6,7 @@ import { registerRoleTools } from './tools/role.js';
 import { registerInterviewEventTools } from './tools/interview-event.js';
 import { registerContactTools } from './tools/contact.js';
 import { validateArgs } from './args.js';
+import logger from './utils/logger.js';
 
 const { supabaseUrl, supabaseAnonKey } = validateArgs();
 const supabase = initializeSupabase(supabaseUrl, supabaseAnonKey);
@@ -26,8 +27,9 @@ async function main() {
     const transport = new StdioServerTransport();
 
     await server.connect(transport);
+    logger.info('MCP server started');
   } catch (error) {
-    // console.error('Error starting MCP server:', error);
+    logger.error('Error starting MCP server:', error);
     process.exit(1);
   }
 }
