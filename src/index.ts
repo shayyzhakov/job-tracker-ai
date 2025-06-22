@@ -8,25 +8,25 @@ import { registerContactTools } from './tools/contact.js';
 import { validateArgs } from './args.js';
 import logger, { initializeLogger } from './utils/logger.js';
 
-const { authToken } = validateArgs();
+const { authToken, refreshToken } = validateArgs();
 
 initializeLogger(authToken);
-
-const supabase = initializeSupabase(authToken);
 
 const server = new McpServer({
   name: 'job-tracker-mcp',
   version: '0.1.0',
 });
 
-// Register all tools
-registerCompanyTools(server, supabase);
-registerRoleTools(server, supabase);
-registerInterviewEventTools(server, supabase);
-registerContactTools(server, supabase);
-
 async function main() {
   try {
+    const supabase = await initializeSupabase(authToken, refreshToken);
+
+    // Register all tools
+    registerCompanyTools(server, supabase);
+    registerRoleTools(server, supabase);
+    registerInterviewEventTools(server, supabase);
+    registerContactTools(server, supabase);
+
     const transport = new StdioServerTransport();
 
     await server.connect(transport);

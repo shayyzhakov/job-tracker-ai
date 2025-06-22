@@ -4,18 +4,18 @@ const supabaseUrl = 'https://amnqqqglmwgvvcjyqvte.supabase.co';
 const supabaseAnonKey =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtbnFxcWdsbXdndnZjanlxdnRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAwMjY0MTcsImV4cCI6MjA2NTYwMjQxN30.Nto5QmhRUsDBvGgowsJ5pjOFffjvaVkN9QqE8pAiwOE';
 
-export function initializeSupabase(authToken?: string) {
-  if (!authToken) return createClient(supabaseUrl, supabaseAnonKey);
+export async function initializeSupabase(
+  authToken?: string,
+  refreshToken?: string,
+) {
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-  return createClient(supabaseUrl, supabaseAnonKey, {
-    global: {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    },
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  });
+  if (authToken) {
+    await supabase.auth.setSession({
+      access_token: authToken,
+      refresh_token: refreshToken ?? '',
+    });
+  }
+
+  return supabase;
 }

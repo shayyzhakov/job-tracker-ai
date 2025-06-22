@@ -2,11 +2,11 @@
 
 ## Authentication & Security
 
-- [ ] Implement Row Level Security (RLS)
 - [ ] Remove support for anonymous users
 - [ ] Redirect unauthenticated users to the Amplify authentication app
 - [ ] Explore options for completing the authentication flow by making the token directly accessible to Claude, avoiding the need to hardcode it in the mcp config.
 - [ ] Support Google login
+- [ ] Add token expiry validation
 
 ## Deployment
 
@@ -16,4 +16,4 @@
 ## Documentation
 
 - [ ] Document the complete authentication flow
-- [ ] Add instructions for handling the authentication token in the auth ap
+- [ ] Add instructions for handling the authentication token in the auth app UI

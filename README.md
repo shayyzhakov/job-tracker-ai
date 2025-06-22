@@ -73,8 +73,8 @@ The system leverages Supabase's serverless architecture, eliminating the need fo
       "command": "node",
       "args": [
         "<path-to-job-tracker>/dist/index.js",
-        "<your-supabase-project-url>",
-        "<your-user-token>"
+        "access-token",
+        "refresh-token"
       ]
     }
   }
@@ -84,8 +84,8 @@ The system leverages Supabase's serverless architecture, eliminating the need fo
 Replace the placeholders:
 
 - `<path-to-job-tracker>`: Path to the installed job-tracker-mcp directory
-- `<your-supabase-project-url>`: Your Supabase project URL
-- `<your-user-token>`: Your Supabase user JWT token
+- `<access-token>`: Your access token
+- `<refresh-token>`: Your refresh token
 
 ### Available Commands
 
