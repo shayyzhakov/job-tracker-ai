@@ -2,7 +2,6 @@
 
 ## Authentication & Security
 
-- [ ] Remove support for anonymous users
 - [ ] Redirect unauthenticated users to the Amplify authentication app
 - [ ] Explore options for completing the authentication flow by making the token directly accessible to Claude, avoiding the need to hardcode it in the mcp config.
 - [ ] Support Google login

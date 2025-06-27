@@ -71,11 +71,7 @@ The system leverages Supabase's serverless architecture, eliminating the need fo
   "mcpServers": {
     "job-tracker": {
       "command": "node",
-      "args": [
-        "<path-to-job-tracker>/dist/index.js",
-        "access-token",
-        "refresh-token"
-      ]
+      "args": ["<path-to-job-tracker>/dist/index.js", "access-token"]
     }
   }
 }
@@ -85,7 +81,6 @@ Replace the placeholders:
 
 - `<path-to-job-tracker>`: Path to the installed job-tracker-mcp directory
 - `<access-token>`: Your access token
-- `<refresh-token>`: Your refresh token
 
 ### Available Commands
 
@@ -105,5 +100,5 @@ The log file is written to `mcp-tool.log` in your user's home directory.
 To view the application's logs in real-time, you can use the following command in your terminal:
 
 ```bash
-tail -f ~/mcp-tool.log
+tail -f ~/.config/job-tracker-mcp/mcp-tool.log
 ```

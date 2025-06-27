@@ -5,23 +5,31 @@ import { registerCompanyTools } from './tools/company.js';
 import { registerRoleTools } from './tools/role.js';
 import { registerInterviewEventTools } from './tools/interview-event.js';
 import { registerContactTools } from './tools/contact.js';
-import { validateArgs } from './args.js';
+import { registerAuthTools } from './tools/auth.js';
 import logger, { initializeLogger } from './utils/logger.js';
-
-const { authToken, refreshToken } = validateArgs();
-
-initializeLogger(authToken);
-
-const server = new McpServer({
-  name: 'job-tracker-mcp',
-  version: '0.1.0',
-});
+import { getConfig } from './utils/configStore.js';
+import { getEmailFromToken } from './utils/tokenService.js';
 
 async function main() {
   try {
-    const supabase = await initializeSupabase(authToken, refreshToken);
+    const accessToken = getConfig<string>('access_token');
+    const refreshToken = getConfig<string>('refresh_token');
+
+    const email = getEmailFromToken(accessToken);
+    if (!email) {
+      throw new Error('Invalid access token payload');
+    }
+    initializeLogger(email);
+
+    const server = new McpServer({
+      name: 'job-tracker-mcp',
+      version: '0.1.0',
+    });
+
+    const supabase = initializeSupabase(accessToken, refreshToken);
 
     // Register all tools
+    registerAuthTools(server);
     registerCompanyTools(server, supabase);
     registerRoleTools(server, supabase);
     registerInterviewEventTools(server, supabase);

@@ -1,19 +1,19 @@
 import winston from 'winston';
 import path from 'path';
-import os from 'os';
+import { CONFIG_DIR } from './consts';
 
 const logger = winston.createLogger({
   level: 'info',
   transports: [
     new winston.transports.File({
-      filename: path.join(os.homedir(), 'mcp-tool.log'),
+      filename: path.join(CONFIG_DIR, 'mcp-tool.log'),
       format: winston.format.combine(
         winston.format.colorize(),
         winston.format.timestamp({ format: 'DD/MM/YYYY HH:mm:ss' }),
         winston.format.printf(
           (info) =>
             `${info.timestamp} ${
-              info.email ? `[${info.email}]` : '[anonymous]'
+              info.username ? `[${info.username}]` : '[anonymous]'
             } ${info.level}: ${info.message}`,
         ),
       ),
@@ -21,17 +21,9 @@ const logger = winston.createLogger({
   ],
 });
 
-export function initializeLogger(authToken?: string) {
+export function initializeLogger(username: string) {
   try {
-    if (!authToken) return;
-
-    const payload = JSON.parse(
-      Buffer.from(authToken.split('.')[1], 'base64').toString(),
-    );
-    const email = payload.email;
-    if (email) {
-      logger.defaultMeta = { ...logger.defaultMeta, email };
-    }
+    logger.defaultMeta = { ...logger.defaultMeta, username };
   } catch (error) {
     // error cant be logged as logger is not initialized
   }
