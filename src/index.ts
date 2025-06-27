@@ -10,8 +10,14 @@ import logger, { initializeLogger } from './utils/logger.js';
 import { getConfig } from './utils/configStore.js';
 import { getEmailFromToken } from './utils/tokenService.js';
 
+// TODO: add after-login flow that re-fetches the tokens from file and updates relevant variables (logger?)
 async function main() {
   try {
+    const server = new McpServer({
+      name: 'job-tracker-mcp',
+      version: '0.1.0',
+    });
+
     const accessToken = getConfig<string>('access_token');
     const refreshToken = getConfig<string>('refresh_token');
 
@@ -20,11 +26,6 @@ async function main() {
       throw new Error('Invalid access token payload');
     }
     initializeLogger(email);
-
-    const server = new McpServer({
-      name: 'job-tracker-mcp',
-      version: '0.1.0',
-    });
 
     const supabase = initializeSupabase(accessToken, refreshToken);
 
