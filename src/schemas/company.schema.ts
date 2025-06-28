@@ -47,10 +47,10 @@ export const CompanyNameSchema = z
     'The name of the company offering the role. If unclear, ask the user for clarification.',
   );
 export const CompanySizeSchema = CompanySize.describe(
-  'The approximate size of the company (e.g., "51-200", "5001-10,000"). If unknown, use the "unknown" value. Do not guess.',
+  'The approximate size of the company (e.g., "51-200", "5001-10,000"). If unknown, first try to by web search, or use the "unknown" value. Do not guess. Strongly encouraged.',
 );
 export const CompanyIndustrySchema = TechIndustry.describe(
-  'The industry of the company, e.g., "Fintech", "Cybersecurity". Encouraged to fill when there is high confidence in the value.',
+  'The industry of the company, e.g., "Fintech", "Cybersecurity". Fill only when there is high confidence in the value. Strongly encouraged.',
 );
 export const CompanyLocationSchema = z
   .string()

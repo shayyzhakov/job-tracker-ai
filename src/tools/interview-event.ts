@@ -65,7 +65,7 @@ export function registerInterviewEventTools(
         event_type: EventTypeSchema,
         event_date: EventDateSchema.optional(),
         contact_id: ContactIdSchema.optional().describe(
-          'The ID of the contact associated with this interview event. Ask the user about it if not stated explicitly, use updateInterviewEvent to add the contact info later on.',
+          'The ID of the contact associated with this interview event. Ask the user about it if not stated explicitly, use updateInterviewEvent to add the contact info later on. Strongly encouraged.',
         ),
         meeting_type: MeetingTypeSchema.optional(),
         notes: NotesSchema.optional(),
