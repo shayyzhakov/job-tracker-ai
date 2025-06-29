@@ -19,21 +19,22 @@ export function registerInterviewEventTools(
   server.registerTool(
     'getInterviewEvents',
     {
-      description: 'Fetch all interview events for a given role.',
+      description:
+        'Fetch all interview events. Optionally filter results by role_id.',
       inputSchema: {
-        role_id: RoleIdSchema.describe(
-          'The ID of the role to fetch events for.',
+        role_id: RoleIdSchema.optional().describe(
+          'The ID of the role to fetch events for. If omitted, returns all events.',
         ),
       },
     },
     async (args: Record<string, unknown>) => {
       logger.info('[tool:getInterviewEvents] tool called');
       const { role_id } = args;
-      const { data, error } = await supabase
-        .from('interview_events')
-        .select('*')
-        .eq('role_id', role_id);
-
+      let query = supabase.from('interview_events').select('*');
+      if (role_id) {
+        query = query.eq('role_id', role_id);
+      }
+      const { data, error } = await query;
       if (error) {
         logger.error(
           '[tool:getInterviewEvents] error fetching interview events',
@@ -45,7 +46,6 @@ export function registerInterviewEventTools(
           ],
         };
       }
-
       logger.info('[tool:getInterviewEvents] tool completed');
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],

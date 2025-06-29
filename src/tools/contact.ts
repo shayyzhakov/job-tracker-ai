@@ -22,7 +22,8 @@ export function registerContactTools(
   server.registerTool(
     'getContacts',
     {
-      description: 'Fetch all contacts for a given company.',
+      description:
+        'Fetch all contacts. Optionally filter results by company name.',
       inputSchema: {
         company_name: CompanyNameSchema.optional(),
       },
