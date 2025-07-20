@@ -22,6 +22,10 @@ import {
   NotesSchema,
   RoleIdSchema,
 } from '../schemas/role.schema';
+import {
+  withToolMiddleware,
+  tokenValidationMiddleware,
+} from '../utils/toolMiddleware';
 
 export type AddRoleParams = {
   user_id?: string;
@@ -53,7 +57,7 @@ export function registerRoleTools(server: McpServer, supabase: SupabaseClient) {
         company_name: CompanyNameSchema.optional(),
       },
     },
-    async (args: Record<string, unknown>) => {
+    withToolMiddleware(async (args: Record<string, unknown>) => {
       logger.info('[tool:getRoles] tool called');
       const { company_name } = args;
 
@@ -78,7 +82,7 @@ export function registerRoleTools(server: McpServer, supabase: SupabaseClient) {
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };
-    },
+    }, tokenValidationMiddleware),
   );
 
   server.registerTool(
@@ -104,7 +108,7 @@ export function registerRoleTools(server: McpServer, supabase: SupabaseClient) {
         notes: NotesSchema.optional(),
       },
     },
-    async (args: Record<string, unknown>) => {
+    withToolMiddleware(async (args: Record<string, unknown>) => {
       logger.info('[tool:addRole] tool called');
       const {
         user_id,
@@ -216,7 +220,7 @@ export function registerRoleTools(server: McpServer, supabase: SupabaseClient) {
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };
-    },
+    }, tokenValidationMiddleware),
   );
 
   server.registerTool(
@@ -237,7 +241,7 @@ export function registerRoleTools(server: McpServer, supabase: SupabaseClient) {
         notes: NotesSchema.optional(),
       },
     },
-    async (args: Record<string, unknown>) => {
+    withToolMiddleware(async (args: Record<string, unknown>) => {
       logger.info('[tool:updateRole] tool called');
       const {
         id,
@@ -281,6 +285,6 @@ export function registerRoleTools(server: McpServer, supabase: SupabaseClient) {
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };
-    },
+    }, tokenValidationMiddleware),
   );
 }

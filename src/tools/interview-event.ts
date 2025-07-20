@@ -11,6 +11,10 @@ import {
 } from '../schemas/interview-event.schema.js';
 import { RoleIdSchema } from '../schemas/role.schema.js';
 import { ContactIdSchema } from '../schemas/contact.schema.js';
+import {
+  withToolMiddleware,
+  tokenValidationMiddleware,
+} from '../utils/toolMiddleware';
 
 export function registerInterviewEventTools(
   server: McpServer,
@@ -27,7 +31,7 @@ export function registerInterviewEventTools(
         ),
       },
     },
-    async (args: Record<string, unknown>) => {
+    withToolMiddleware(async (args: Record<string, unknown>) => {
       logger.info('[tool:getInterviewEvents] tool called');
       const { role_id } = args;
       let query = supabase.from('interview_events').select('*');
@@ -50,7 +54,7 @@ export function registerInterviewEventTools(
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };
-    },
+    }, tokenValidationMiddleware),
   );
 
   server.registerTool(
@@ -72,7 +76,7 @@ export function registerInterviewEventTools(
         outcome: OutcomeSchema.optional(),
       },
     },
-    async (args: Record<string, unknown>) => {
+    withToolMiddleware(async (args: Record<string, unknown>) => {
       logger.info('[tool:addInterviewEvent] tool called');
       const {
         role_id,
@@ -115,7 +119,7 @@ export function registerInterviewEventTools(
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };
-    },
+    }, tokenValidationMiddleware),
   );
 
   server.registerTool(
@@ -132,7 +136,7 @@ export function registerInterviewEventTools(
         outcome: OutcomeSchema.optional(),
       },
     },
-    async (args: Record<string, unknown>) => {
+    withToolMiddleware(async (args: Record<string, unknown>) => {
       logger.info('[tool:updateInterviewEvent] tool called');
       const {
         id,
@@ -173,7 +177,7 @@ export function registerInterviewEventTools(
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };
-    },
+    }, tokenValidationMiddleware),
   );
 
   server.registerTool(
@@ -186,7 +190,7 @@ export function registerInterviewEventTools(
         ),
       },
     },
-    async (args: Record<string, unknown>) => {
+    withToolMiddleware(async (args: Record<string, unknown>) => {
       logger.info('[tool:removeInterviewEvent] tool called');
       const { id } = args;
       const { error } = await supabase
@@ -209,12 +213,9 @@ export function registerInterviewEventTools(
       logger.info('[tool:removeInterviewEvent] tool completed');
       return {
         content: [
-          {
-            type: 'text',
-            text: `Interview event with id ${id} was removed successfully`,
-          },
+          { type: 'text', text: 'Interview event removed successfully' },
         ],
       };
-    },
+    }, tokenValidationMiddleware),
   );
 }

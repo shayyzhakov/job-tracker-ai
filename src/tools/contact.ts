@@ -14,6 +14,10 @@ import {
   CompanyIdSchema,
   CompanyNameSchema,
 } from '../schemas/company.schema.js';
+import {
+  withToolMiddleware,
+  tokenValidationMiddleware,
+} from '../utils/toolMiddleware';
 
 export function registerContactTools(
   server: McpServer,
@@ -28,7 +32,7 @@ export function registerContactTools(
         company_name: CompanyNameSchema.optional(),
       },
     },
-    async (args: Record<string, unknown>) => {
+    withToolMiddleware(async (args: Record<string, unknown>) => {
       logger.info('[tool:getContacts] tool called');
       const { company_name } = args;
 
@@ -53,7 +57,7 @@ export function registerContactTools(
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };
-    },
+    }, tokenValidationMiddleware),
   );
 
   server.registerTool(
@@ -70,7 +74,7 @@ export function registerContactTools(
         notes: NotesSchema.optional(),
       },
     },
-    async (args: Record<string, unknown>) => {
+    withToolMiddleware(async (args: Record<string, unknown>) => {
       logger.info('[tool:addContact] tool called');
       const {
         company_id,
@@ -111,7 +115,7 @@ export function registerContactTools(
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };
-    },
+    }, tokenValidationMiddleware),
   );
 
   server.registerTool(
@@ -128,7 +132,7 @@ export function registerContactTools(
         notes: NotesSchema.optional(),
       },
     },
-    async (args: Record<string, unknown>) => {
+    withToolMiddleware(async (args: Record<string, unknown>) => {
       logger.info('[tool:updateContact] tool called');
       const { id, name, role, email, linkedin_url, phone_number, notes } = args;
 
@@ -160,6 +164,6 @@ export function registerContactTools(
       return {
         content: [{ type: 'text', text: JSON.stringify(data) }],
       };
-    },
+    }, tokenValidationMiddleware),
   );
 }

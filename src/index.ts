@@ -5,7 +5,6 @@ import { registerCompanyTools } from './tools/company.js';
 import { registerRoleTools } from './tools/role.js';
 import { registerInterviewEventTools } from './tools/interview-event.js';
 import { registerContactTools } from './tools/contact.js';
-import { registerAuthTools } from './tools/auth.js';
 import logger, { initializeLogger } from './utils/logger.js';
 import { getConfig } from './utils/configStore.js';
 import { getEmailFromToken } from './utils/tokenService.js';
@@ -30,7 +29,6 @@ async function main() {
     const supabase = initializeSupabase(accessToken, refreshToken);
 
     // Register all tools
-    registerAuthTools(server);
     registerCompanyTools(server, supabase);
     registerRoleTools(server, supabase);
     registerInterviewEventTools(server, supabase);

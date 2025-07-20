@@ -10,6 +10,10 @@ import {
   CompanyNotesSchema,
 } from '../schemas/company.schema';
 import logger from '../utils/logger';
+import {
+  withToolMiddleware,
+  tokenValidationMiddleware,
+} from '../utils/toolMiddleware';
 
 export function registerCompanyTools(
   server: McpServer,
@@ -22,7 +26,7 @@ export function registerCompanyTools(
         'Fetches all companies where the user has active interview progress',
       inputSchema: {},
     },
-    async () => {
+    withToolMiddleware(async () => {
       logger.info('[tool:getCompanies] tool called');
 
       const { data, error } = await supabase.from('companies').select('*');
@@ -41,7 +45,7 @@ export function registerCompanyTools(
         content: [{ type: 'text', text: JSON.stringify(data) }],
         structuredContent: { companies: data },
       };
-    },
+    }, tokenValidationMiddleware),
   );
 
   server.registerTool(
@@ -57,55 +61,58 @@ export function registerCompanyTools(
         notes: CompanyNotesSchema.optional(),
       },
     },
-    async ({
-      id,
-      name,
-      size,
-      industry,
-      location,
-      notes,
-    }: {
-      id: string;
-      name?: string;
-      size?: z.infer<typeof CompanySizeSchema>;
-      industry?: z.infer<typeof CompanyIndustrySchema>;
-      location?: string;
-      notes?: string;
-    }) => {
-      const updateData: {
+    withToolMiddleware(
+      async ({
+        id,
+        name,
+        size,
+        industry,
+        location,
+        notes,
+      }: {
+        id: string;
         name?: string;
         size?: z.infer<typeof CompanySizeSchema>;
         industry?: z.infer<typeof CompanyIndustrySchema>;
         location?: string;
         notes?: string;
-      } = {};
-      logger.info('[tool:updateCompany] tool called');
-      if (name !== undefined) updateData.name = name;
-      if (size !== undefined) updateData.size = size;
-      if (industry !== undefined) updateData.industry = industry;
-      if (location !== undefined) updateData.location = location;
-      if (notes !== undefined) updateData.notes = notes;
+      }) => {
+        const updateData: {
+          name?: string;
+          size?: z.infer<typeof CompanySizeSchema>;
+          industry?: z.infer<typeof CompanyIndustrySchema>;
+          location?: string;
+          notes?: string;
+        } = {};
+        logger.info('[tool:updateCompany] tool called');
+        if (name !== undefined) updateData.name = name;
+        if (size !== undefined) updateData.size = size;
+        if (industry !== undefined) updateData.industry = industry;
+        if (location !== undefined) updateData.location = location;
+        if (notes !== undefined) updateData.notes = notes;
 
-      const { data, error } = await supabase
-        .from('companies')
-        .update(updateData)
-        .eq('id', id)
-        .select()
-        .single();
+        const { data, error } = await supabase
+          .from('companies')
+          .update(updateData)
+          .eq('id', id)
+          .select()
+          .single();
 
-      if (error) {
-        logger.error('[tool:updateCompany] error updating company', error);
+        if (error) {
+          logger.error('[tool:updateCompany] error updating company', error);
+          return {
+            content: [
+              { type: 'text', text: JSON.stringify({ error: error.message }) },
+            ],
+          };
+        }
+
+        logger.info('[tool:updateCompany] tool completed');
         return {
-          content: [
-            { type: 'text', text: JSON.stringify({ error: error.message }) },
-          ],
+          content: [{ type: 'text', text: JSON.stringify(data) }],
         };
-      }
-
-      logger.info('[tool:updateCompany] tool completed');
-      return {
-        content: [{ type: 'text', text: JSON.stringify(data) }],
-      };
-    },
+      },
+      tokenValidationMiddleware,
+    ),
   );
 }
